@@ -93,7 +93,7 @@ To build PyImfit from the Github source, you will need the following:
 
 3. Compile embedded IMFIT
 
-       $ cd imfit
+       $ cd pyimfit/imfit
        $ scons imfit
        $ scons imfit-mcmc
        $ scons makeimage
