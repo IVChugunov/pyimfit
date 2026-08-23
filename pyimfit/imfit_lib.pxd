@@ -86,7 +86,7 @@ cdef extern from "model_object.h":
         int UseCashStatistic( )
         void UsePoissonMLR( )
         int WhichFitStatistic( bool verbose=false )
-        double GetFitStatistic( double *params )
+        double GetFitStatistic( double *params ) nogil
         int FinalSetupForFitting( )
         void SetMaxThreads( int maxThreadNumber )
         int GetNParams( )
@@ -158,11 +158,11 @@ cdef extern from "dispatch_solver.h":
                     int nPixelsTot, double *parameters, vector[mp_par] parameterInfo,
                     ModelObject *modelObj, double fracTolerance, bool paramLimitsExist,
                     int verboseLevel, SolverResults *solverResults, string& solverName,
-                    unsigned long rngSeed )
+                    unsigned long rngSeed ) nogil
     int DispatchToSolver( int solverID, int nParametersTot, int nFreeParameters,
                     int nPixelsTot, double *parameters, vector[mp_par] parameterInfo,
                     ModelObject *modelObj, double fracTolerance, bool paramLimitsExist,
-                    int verboseLevel, SolverResults *solverResults, string& solverName )
+                    int verboseLevel, SolverResults *solverResults, string& solverName ) nogil
 
 
 cdef extern from "convolver.h":

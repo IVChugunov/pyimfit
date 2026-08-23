@@ -63,51 +63,7 @@ Also useful: [Onine documentation for Imfit](https://imfit.readthedocs.io); and 
 
 PyImfit is designed to work with modern versions of Python 3 (3.10 or later)  on Linux and macOS; no support for Python 2 is planned.
 
-### Standard installation via pip: macOS
-
-A precompiled binary version ("wheel") of PyImfit for macOS can be installed from PyPI via `pip` (I'm using
-`pip3` in this example just to ensure it's installed for Python 3; using just `pip` on macOS might try to
-install it into the system's Python 2.7 distribution, which is not what you want):
-
-    $ pip3 install pyimfit
-
-PyImfit requires the following Python libraries/packages (which will automatically be installed
-by `pip` if they are not already present):
-
-* Numpy
-* Scipy
-
-The `requests` package will also be installed if not already present, though this is only used
-for running the test script.
-
-The `astropy.io` package is also useful for reading in FITS files as numpy arrays (and is required by the
-unit tests).
-
-
-### Standard installation via pip: Linux
-
-PyImfit can also be installed on Linux using `pip`. Since this involves building from source,
-you will need to have a working C++-11-compatible compiler (e.g., GCC version 4.8.1 or later);
-this is probably true for any reasonably modern Linux installation. (**Note:** a 64-bit Linux
-system is required.)
-
-    $ pip3 install pyimfit   [or "pip3 install --user pyimfit", if installing for your own use]
-
-If the installation fails with a message containing something like "fatal error: Python.h: 
-No such file or directory", then you may be missing headers files and static libraries for
-Python development; see [this Stackexchange question](https://stackoverflow.com/questions/21530577/fatal-error-python-h-no-such-file-or-directory)
-for guidance on how to deal with that.
-
-
-### Installation via conda
-
-PyImfit can also be installed into a conda environment on macOS or Linux, via
-
-    $ conda install -c conda-forge perwin::pyimfit
-
-
-
-### Building the Whole Thing from Source
+### Installation from source
 
 To build PyImfit from the Github source, you will need the following:
 
@@ -115,9 +71,7 @@ To build PyImfit from the Github source, you will need the following:
    [FFTW3](https://www.fftw.org) [version 3], [GNU Scientific Library](https://www.gnu.org/software/gsl/) [version 2.0
    or later!], and [NLopt](https://nlopt.readthedocs.io/en/latest/)
    
-   * This Github repository (use `--recurse-submodules` to ensure the Imfit repo is also downloaded)
-           
-           $ git clone --recurse-submodules git://github.com/perwin/pyimfit.git
+   * This Github repository
 
    * A reasonably modern C++ compiler -- e.g., GCC 4.8.1 or later, or any C++-11-aware version of 
    Clang++/LLVM that includes support for OpenMP. See below for special notes about using
@@ -133,11 +87,21 @@ To build PyImfit from the Github source, you will need the following:
     * Note that version 2.0 or later of GSL is required! (For Ubuntu, this means
     the `libgsl-dev` package for Ubuntu 16.04 or later.)
 
-2. Clone the PyImfit repository
+2. Clone the PyImfit repository (use `--recurse-submodules` to ensure the Imfit repo is also downloaded)
 
-       $ git clone --recurse-submodules git://github.com/perwin/pyimfit.git
+       $ git clone git://github.com/IVChugunov/pyimfit.git
 
-3. Build the Python package
+3. Compile embedded IMFIT
+
+       $ cd imfit
+       $ scons imfit
+       $ scons imfit-mcmc
+       $ scons makeimage
+       $ scons libimfit.a
+       $ cd ..
+
+
+4. Build the Python package
 
    * **[macOS only:] First, specify a valid, OpenMP-compatible C++ compiler**
    
@@ -151,22 +115,21 @@ To build PyImfit from the Github source, you will need the following:
       See [here](https://iscinumpy.gitlab.io/post/omp-on-high-sierra/) for more details.
    
    * Build and install PyImfit!
-   
-      * For testing purposes (installs a link to current directory in your usual package-install location)
-
-            $ python3 setup.py develop
 
       * For general installation (i.e., actually installs the package in your usual package-install location)
 
+            $ python3 setup.py build
             $ python3 setup.py install
 
 
 ## Credits
 
 PyImfit originated as [python-imfit](https://github.com/streeto/python-imfit), written by André Luiz de Amorim; 
-the current, updated version is by Peter Erwin.
+the updated version is [by Peter Erwin](https://github.com/perwin/pyimfit).
 
 (See [the Imfit manual](http://www.mpe.mpg.de/~erwin/resources/imfit/imfit_howto.pdf) for additional credits.)
+
+This particular version includes minor modifications by Ilia V. Chugunov.
 
 
 ## License

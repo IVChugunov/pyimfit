@@ -712,10 +712,17 @@ cdef class ModelObjectWrapper( object ):
             msg = "Length of newParameters ({0:d}) is not ".format(len(newParameters))
             msg += "equal to number of parameters in model ({0:d})!".format(self._nParams)
             raise ValueError(msg)
-        return self._model.GetFitStatistic(&newParameters[0])
+
+        cdef double result
+
+        with nogil:
+            result = self._model.GetFitStatistic(&newParameters[0])
+
+        return result
 
 
     def fit( self, double ftol=1e-8, int verbose=-1, mode='LM', seed=0 ):
+        cdef unsigned long rngSeed
         cdef int solverID
         cdef string nloptSolverName
         # status = self._model.FinalSetupForFitting()
@@ -726,10 +733,13 @@ cdef class ModelObjectWrapper( object ):
             self.doFinalSetup()
         solverID = solverID_dict[mode]
         nloptSolverName = b""
-        self._fitStatus = DispatchToSolver(solverID, self._nParams, self._nFreeParams,
+
+        rngSeed = seed
+        with nogil:
+            self._fitStatus = DispatchToSolver(solverID, self._nParams, self._nFreeParams,
                                             self._nPixels, self._paramVect, self._paramInfo,
                                             self._model, ftol, self._paramLimitsExist,
-                                            verbose, self._solverResults, nloptSolverName, seed)
+                                            verbose, self._solverResults, nloptSolverName, rngSeed)
         if mode == 'LM':
             self._fitResult = self._solverResults.GetMPResults()
             if self._solverResults.ErrorsPresent():
