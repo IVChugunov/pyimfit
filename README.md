@@ -89,7 +89,7 @@ To build PyImfit from the Github source, you will need the following:
 
 2. Clone the PyImfit repository (use `--recurse-submodules` to ensure the Imfit repo is also downloaded)
 
-       $ git clone git://github.com/IVChugunov/pyimfit.git
+       $ git clone --recurse-submodules git://github.com/IVChugunov/pyimfit.git
 
 3. Compile embedded IMFIT
 
