@@ -89,37 +89,39 @@ To build PyImfit from the Github source, you will need the following:
 
 2. Clone the PyImfit repository (use `--recurse-submodules` to ensure the Imfit repo is also downloaded)
 
-       $ git clone --recurse-submodules git://github.com/IVChugunov/pyimfit.git
+        $ git clone --recurse-submodules git://github.com/IVChugunov/pyimfit.git
 
-3. Compile embedded IMFIT
+3. Install the Python package
 
-       $ cd pyimfit/imfit
-       $ scons imfit
-       $ scons imfit-mcmc
-       $ scons makeimage
-       $ scons libimfit.a
-       $ cd ..
-
-
-4. Build the Python package
-
-   * **[macOS only:] First, specify a valid, OpenMP-compatible C++ compiler**
+    * **[macOS only:] First, specify a valid, OpenMP-compatible C++ compiler**
    
-         $ export CC=<c++-compiler-name>; export CXX=<c++-compiler-name>
+        $ export CC=<c++-compiler-name>; export CXX=<c++-compiler-name>
         
     (Note that you need to point CC and CXX to the *same*, Open-MP-compatible C++ compiler!
     This should not be necessary on a Linux system, assuming the default compiler is standard GCC.)
     
-      * Versions of Apple's Clang compiler from Xcode 9 or later *can* compile OpenMP code, but you
+    * Versions of Apple's Clang compiler from Xcode 9 or later *can* compile OpenMP code, but you
       will need to also install the OpenMP library (e.g., `brew install libomp` if using Homebrew).
       See [here](https://iscinumpy.gitlab.io/post/omp-on-high-sierra/) for more details.
    
-   * Build and install PyImfit!
+    * If you want to use PyImfit as is, then build and install it immediately:
 
-      * For general installation (i.e., actually installs the package in your usual package-install location)
+        $ cd pyimfit
+        $ python3 setup.py install
+
+    * If you want to add your own functions, a few extra steps are needed:
+
+        * First, add them to embedded Imfit (see Sec. 14 in the [Imfit manual](http://www.mpe.mpg.de/~erwin/resources/imfit/imfit_howto.pdf). When rebuilding Imfit, ensure that static library was built as well:
+
+            $ cd imfit
+            $ scons imfit && scons imfit-mcmc && scons makeimage && scons libimfit.a
+            $ cp libimfit.a ../prebuilt/linux64/ && cp libimfit.a ../libimfit
+            $ cd ..
+
+        * Next, build and install it by yourself:
 
             $ python3 setup.py build
-            $ python3 setup.py install
+            $ pip install .
 
 
 ## Credits
